@@ -1,1 +1,7 @@
-# rn-dice-game
+
+## Steps to run the project
+
+1. ### Clone the repo (`git clone <url>`)
+2. ### `cd rn-dice-game`
+3. ### `yarn install`
+4. ### `npx react-native run-android`
