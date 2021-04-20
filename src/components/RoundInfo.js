@@ -23,10 +23,16 @@ export default function RoundInfo() {
     winningScore,
   } = state;
 
+  const n = 3;
+
   useEffect(() => {
+    console.log('CDM', playersList);
     if (!ftue) {
       let list = playersList.slice();
       list[roundIndex].score += diceFace;
+
+      list[roundIndex].history.push(diceFace);
+
       if (diceFace === 1) {
         list[roundIndex].consecutiveOnes++;
       }
@@ -55,6 +61,8 @@ export default function RoundInfo() {
   }, [roundIndex]);
 
   const onPressPlay = () => {
+    // console.log('onPressPlay', playersList);
+    let list = playersList.slice();
     let nextRoundIndex = (roundIndex + 1) % playersList.length;
     if (ftue) {
       dispatch({
@@ -68,7 +76,17 @@ export default function RoundInfo() {
         ToastAndroid.SHORT,
       );
     } else {
-      if (diceFace === 6 && playersList[roundIndex]?.lastRollSix) {
+      let newNum = n > list.length ? 0 : n;
+      let slicedArray = list.slice(list.length - newNum, list.length);
+      let sum = slicedArray.reduce((acc, item) => acc + item, 0);
+      let condition = slicedArray.length === n && sum === 10;
+      if (condition) {
+        ToastAndroid.show(
+          ` ${playersList[roundIndex]?.name} gets another turn as they got last three turn sum equal to 10`,
+          ToastAndroid.SHORT,
+        );
+        // list[roundIndex].history.length = 0;
+      } else if (diceFace === 6 && playersList[roundIndex]?.lastRollSix) {
         ToastAndroid.show(
           ` ${playersList[roundIndex]?.name} gets another turn as they got a 6`,
           ToastAndroid.SHORT,
@@ -82,7 +100,6 @@ export default function RoundInfo() {
           }’s turn now`,
           ToastAndroid.SHORT,
         );
-        let list = playersList.slice();
         list[nextRoundIndex].consecutiveOnes = 0;
         dispatch({
           type: aTypes.SET_PLAYERS_LIST,

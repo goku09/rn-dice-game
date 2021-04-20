@@ -55,6 +55,7 @@ export default function Form() {
         consecutiveOnes: 0,
         lastRollSix: false,
         hasCompleted: false,
+        history: [],
       });
     }
     newPlayersList = shuffleArray(newPlayersList);
